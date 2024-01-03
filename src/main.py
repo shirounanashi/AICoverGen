@@ -24,6 +24,7 @@ from rvc import Config, load_hubert, get_vc, rvc_infer
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
+vr_models_dir = os.path.join(BASE_DIR, 'vr_models')
 rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
 
@@ -182,7 +183,7 @@ def preprocess_song(song_input, mdx_model_params, song_id, is_webui, input_type,
     vocals_path, instrumentals_path = run_mdx(mdx_model_params, song_output_dir, os.path.join(mdxnet_models_dir, 'MDX23C-8KFFT-InstVoc_HQ.ckpt'), orig_song_path, denoise=True, keep_orig=keep_orig)
 
     display_progress('[~] Separating Main Vocals from Backup Vocals...', 0.2, is_webui, progress)
-    backup_vocals_path, main_vocals_path = run_mdx(mdx_model_params, song_output_dir, os.path.join(mdxnet_models_dir, 'karokee_4band_v2_sn.pth'), vocals_path, suffix='Backup', invert_suffix='Main')
+    backup_vocals_path, main_vocals_path = run_mdx(mdx_model_params, song_output_dir, os.path.join(vr_models_dir, 'karokee_4band_v2_sn.pth'), vocals_path, suffix='Backup', invert_suffix='Main')
 
     display_progress('[~] Applying DeReverb to Vocals...', 0.3, is_webui, progress)
     _, main_vocals_dereverb_path = run_mdx(mdx_model_params, song_output_dir, os.path.join(mdxnet_models_dir, 'Reverb_HQ_By_FoxJoy.onnx'), main_vocals_path, invert_suffix='DeReverb', exclude_main=True, denoise=True)
